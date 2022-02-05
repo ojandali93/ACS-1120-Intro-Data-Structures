@@ -42,7 +42,7 @@ class Dictogram(dict):
         # TODO: Randomly choose a word based on its frequency in this histogram
         count = 0
         random_integer = random.randint(0, self.tokens)
-        for key in self:
+        for key in self.keys():
             if count <= random_integer:
                 value = self[key]
                 count += value
