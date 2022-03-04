@@ -139,9 +139,6 @@ class LinkedList:
                 reroute_to = current_node.next
             selected_node.next = reroute_to
 
-        
-
-
 if __name__ == "__main__":
     my_ll = LinkedList(["A", "B", "C"])
     print(my_ll)
