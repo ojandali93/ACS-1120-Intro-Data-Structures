@@ -100,7 +100,15 @@ class LinkedList:
                 return True
             current_node = current_node.next
         return False
-            
+
+    def find_if_matches(self, matching_function):
+        """Return an item from this linked list if it is present."""
+        current_node = self.head
+        while current_node:
+            if matching_function(current_node.data): 
+                return current_node.data
+            current_node = current_node.next
+        return None
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.
