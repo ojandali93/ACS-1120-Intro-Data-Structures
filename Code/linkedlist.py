@@ -69,13 +69,12 @@ class LinkedList:
         # TODO: If self.is_empty() == True set the head and the tail to the new node
         # TODO: Else append node after tail
         new_node = Node(item)
-        if self.is_empty == True:
+        if self.is_empty() == True:
             self.head = new_node
             self.tail = new_node
         else:
-            self.tail = new_node
             self.tail.next = new_node
-
+            self.tail = new_node
 
     def prepend(self, item):
         """Insert the given item at the head of this linked list.
@@ -83,12 +82,12 @@ class LinkedList:
         # TODO: Create new node to hold given item
         # TODO: Prepend node before head, if it exists
         new_node = Node(item)
-        if self.is_empty == True:
+        if self.is_empty() == True:
             self.head = new_node
             self.tail = new_node
         else:
+            new_node.next = self.head
             self.head = new_node
-            self.next = self.head
 
     def find(self, item):
         """Return an item from this linked list if it is present.
@@ -96,12 +95,7 @@ class LinkedList:
         TODO: Worst case running time: O(???) Why and under what conditions?"""
         # TODO: Loop through all nodes to find item, if present return True otherwise False
         current_node = self.head
-        next_node = self.next
-        if current_node.data == item:
-            return True
-        if self.tail.data == item:
-            return True
-        while current_node is not None:
+        while current_node is not None:    #while node: does the same thing!
             if current_node.data == item:
                 return True
             current_node = current_node.next
