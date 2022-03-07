@@ -1,40 +1,54 @@
-from histogram import histogram_dict, read_file
 from dictogram import Dictogram
+import random
+from random import choice
+from tokens import tokens
+import sys
 
-file = './data/peaky_blinders_s1e1.txt'
-word_list = read_file(file).replace(',', '').replace('.', '').replace('?', '').replace('"', '').replace('”', '').replace('’', '').replace('`', '').replace('!', '').replace('/', '').replace(';', '').replace(':', '').lower().split()
 
-char_limit = 200
+def markov_dict(dictionary):
+    word_list = source.split()
+    markov_dict = {}
+    words_range = range(len(word_list) - 2)
 
-def dictionary_histogram_generator(word_list):
-    start_word = word_list[0]
-    dict_histogram = {}
-    for i in range(len(word_list) - 1):
-        current_word = word_list[i]
-        next_word = word_list[i + 1]
-        if current_word not in dict_histogram:
-            histogram = Dictogram()
-            histogram.add_count(next_word)
-            dict_histogram[word] = histogram
+    for word_index in words_range:
+        first_word = word_list[word_index]
+        second_word = word_list[word_index + 1]
+        third_word = word_list[word_index + 2]
+
+        curr_tuple = (first_word, second_word)
+
+        if curr_tuple in markov_dict:
+            markov_dict[curr_tuple].add_count(third_word)
         else:
-            dict_histogram[current_word].add_count(next_word)
-    return dict_histogram
+            markov_dict[curr_tuple] = Dictogram([third_word])
+    return markov_dict
 
-def tweet_generator(markov_chain_dict):
-    tweet_sentence = ''
-    start = next(iter(markov_chain_dict))
-    tweet_sentence += start
+def next_words(histogram):
+    count = 0
+    dart = random.random()
+    for key,value in histogram.items(): 
+        count += value
+        if count >= dart: 
+            return key
 
-    while len(tweet) < char_limit:
-        tweet_list = tweet.split()
-        last_word = tweet_list[-1]
-        last_word_histogram = markov_chain_dict[last_word]
-        next_word = last_word_histogram.sample()
-        tweet += ' ' + next_word
-    return tweet
+def markov_chain(dictionary):
+    dict_keys = [key for key, value in dictionary.items()]
+    word_list = list(dict_keys[random.randint(0, len(dict_keys) - 1)])
 
+    for word_index in range(10):
+        tuple_key = tuple((word_list[index]) for index in range(word_index, word_index + 2))
+        if tuple_key in dictionary:
+            word_dictogram = dictionary[tuple_key]
+            next_word = next_words(word_dictogram)
+            word_list.append(next_word)
+        else:
+            break
+    return " ".join(word_list)
 
-if __name__ == '__main__':
-    markov_chain = dictionary_histogram_generator(word_list)
-    tweet = tweet_generator(markov_chain)
-    print(tweet)
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+        source = open(filename).read()
+        print(markov_chain(markov_dict(source)))
+    else:
+        print('No source text filename given as argument')
